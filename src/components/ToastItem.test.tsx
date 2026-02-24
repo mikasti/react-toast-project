@@ -25,12 +25,12 @@ describe('ToastItem', () => {
     });
 
     it('renders correctly', () => {
-        render(<ToastItem toast={defaultToast} onRemove={mockOnRemove} />);
+        render(<ToastItem toast={defaultToast} onRemoveToast={mockOnRemove} />);
         expect(screen.getByText('Test Message')).toBeInTheDocument();
     });
 
     it('calls onRemove after duration', () => {
-        render(<ToastItem toast={defaultToast} onRemove={mockOnRemove} />);
+        render(<ToastItem toast={defaultToast} onRemoveToast={mockOnRemove} />);
 
         vi.advanceTimersByTime(2999);
         expect(mockOnRemove).not.toHaveBeenCalled();
@@ -45,7 +45,7 @@ describe('ToastItem', () => {
     });
 
     it('pauses on hover and resumes on leave (Smart Timer)', () => {
-        render(<ToastItem toast={defaultToast} onRemove={mockOnRemove} />);
+        render(<ToastItem toast={defaultToast} onRemoveToast={mockOnRemove} />);
 
         vi.advanceTimersByTime(1000);
 
@@ -74,14 +74,14 @@ describe('ToastItem', () => {
     });
 
     it('resets timer when timestamp updates (deduplication)', () => {
-        const { rerender } = render(<ToastItem toast={defaultToast} onRemove={mockOnRemove} />);
+        const { rerender } = render(<ToastItem toast={defaultToast} onRemoveToast={mockOnRemove} />);
 
         vi.advanceTimersByTime(2000);
 
         expect(mockOnRemove).not.toHaveBeenCalled();
 
         const updatedToast = { ...defaultToast, timestamp: Date.now() };
-        rerender(<ToastItem toast={updatedToast} onRemove={mockOnRemove} />);
+        rerender(<ToastItem toast={updatedToast} onRemoveToast={mockOnRemove} />);
 
         vi.advanceTimersByTime(2000);
 

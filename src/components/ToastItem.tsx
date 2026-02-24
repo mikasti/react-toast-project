@@ -5,24 +5,24 @@ import { TOAST_APPEARANCE_ANIMATION_MS } from '../common/constants.ts';
 
 interface ToastItemProps {
   toast: Toast;
-  onRemove: (id: string) => void;
+  onRemoveToast: (id: string) => void;
 }
 
-export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
-  const [isExiting, setIsExiting] = useState(false);
+export const ToastItem: FC<ToastItemProps> = ({ toast, onRemoveToast }) => {
+  const [isToastClosing, setIsToastClosing] = useState(false);
 
-  const startExit = useCallback(() => {
-    setIsExiting(true);
-    setTimeout(() => onRemove(toast.id), TOAST_APPEARANCE_ANIMATION_MS);
-  }, [onRemove, toast.id]);
+  const handleCloseToast = useCallback(() => {
+    setIsToastClosing(true);
+    setTimeout(() => onRemoveToast(toast.id), TOAST_APPEARANCE_ANIMATION_MS);
+  }, [onRemoveToast, toast.id]);
 
   const { pauseTimer, resumeTimer } = usePausableTimer({
     duration: toast.duration,
     timestamp: toast.timestamp,
-    onExpire: startExit,
+    onExpire: handleCloseToast,
   });
 
-  const className = `toast toast-${toast.type}${isExiting ? ' toast-unmount' : ''}`;
+  const className = `toast toast-${toast.type}${isToastClosing ? ' toast-unmount' : ''}`;
 
   return (
     <div
@@ -32,7 +32,7 @@ export const ToastItem: FC<ToastItemProps> = ({ toast, onRemove }) => {
       role="alert"
     >
       <span>{toast.message}</span>
-      <button onClick={startExit}>×</button>
+      <button onClick={handleCloseToast}>×</button>
     </div>
   );
 };
